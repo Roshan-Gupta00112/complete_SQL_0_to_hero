@@ -1,0 +1,184 @@
+select first_name, last_name, email from customer
+
+
+select * from film
+
+select distinct rating from film
+
+
+select * from payment limit 5
+
+
+select distinct amount from payment
+
+select count(distinct amount) from payment
+
+
+select * from film limit 3
+
+
+select count(*) as title_count from film 
+where replacement_cost > '14.99' and rating = 'R' or rating = 'PG-13'
+
+
+select count(*) from customer where first_name = 'Jared'
+
+
+select * from customer where first_name = 'Jared'
+
+
+select email from customer where first_name = 'Nancy' 
+and last_name = 'Thomas'
+
+
+select description  from film where title = 'Outlaw Hanky'
+
+select phone from address where address = '259 Ipoh Drive'
+
+
+select customer_id from payment order by payment_date asc limit 10
+
+
+select title from film order by length asc limit 5
+
+select count(title) from film where length <= 50
+
+select count(distinct title) from film where length <= 50
+
+select count(*) from payment where amount > 5
+
+select count(*) from actor where first_name LIKE 'P%'
+select count(actor_id) from actor where first_name LIKE 'P%'
+
+select count(distinct district) from address
+
+select distinct district from address
+
+Select count(*) from film where rating = 'R' and replacement_cost between 5 and 15
+
+select count(*) from film where title like '%Truman%'
+
+
+select customer_id, staff_id, Sum(amount)
+from payment
+group by customer_id, staff_id
+order by customer_id, Sum(amount) desc
+
+
+
+select staff_id, count(payment_id)
+from payment
+group by staff_id
+order by count(payment_id) desc
+
+select staff_id
+from payment
+group by staff_id
+order by count(payment_id) desc
+limit 1
+
+
+
+
+
+
+select rating, AVG(replacement_cost)
+from film
+group by rating
+
+select rating, ROUND(AVG(replacement_cost), 2)
+from film
+group by rating
+
+
+
+
+
+select customer_id, sum(amount)
+from payment
+group by customer_id
+order by sum(amount) desc
+limit 5
+
+
+
+
+
+
+select customer_id, count(payment_id)
+from payment
+group by customer_id
+having count(payment_id) >=40
+
+select customer_id, sum(amount)
+from payment
+where staff_id = 2
+group by customer_id
+having sum(amount) > 100
+
+
+
+
+select customer_id 
+from payment
+where staff_id = 2
+group by customer_id
+having sum(amount) >= 110;
+
+
+
+
+select count(title) 
+from film 
+where title like 'J%';
+
+
+
+select first_name, last_name 
+from customer
+where first_name like 'E%' and address_id < 500
+order by customer_id desc
+limit 1
+
+
+
+
+select email from customer
+inner join address
+on customer.address_id = address.address_id
+where district = 'California'
+
+
+
+select title from film
+where film_id in (
+	select film_id from film_actor
+	join actor
+	on film_actor.actor_id = actor.actor_id
+	where first_name = 'Nick' and last_name = 'Wahlberg'
+);
+
+
+select title, first_name, last_name from actor
+join film_actor
+on actor.actor_id = film_actor.actor_id
+join film
+on film_actor.film_id = film.film_id
+where first_name = 'Nick' and last_name = 'Wahlberg'
+
+
+
+
+
+
+show all
+
+show timezone
+
+select now()
+
+select timeofday()
+
+select current_time
+
+select current_date
