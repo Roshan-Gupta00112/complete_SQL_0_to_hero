@@ -159,6 +159,7 @@ where film_id in (
 );
 
 
+
 select title, first_name, last_name from actor
 join film_actor
 on actor.actor_id = film_actor.actor_id
@@ -182,3 +183,40 @@ select timeofday()
 select current_time
 
 select current_date
+
+
+
+
+
+
+
+select payment_date, extract(day from payment_date) from payment
+
+select payment_date, extract(week from payment_date) from payment
+
+select payment_date, extract(month from payment_date) from payment
+
+select payment_date, extract(year from payment_date) from payment
+
+select payment_date, extract(quarter from payment_date) from payment
+
+
+
+select age(payment_date) from payment
+
+
+
+
+select to_char(payment_date, 'dd/mm/yy') from payment
+
+select to_char(payment_date, 'mon/dd/yy') from payment
+
+select to_char(payment_date, 'mm/dd/yy') from payment
+
+select to_char(payment_date, 'MONTH-YYYY') from payment
+
+select to_char(payment_date, 'MONTH YYYY') from payment
+
+select to_char(payment_date, 'YYYY') from payment
+
+select to_char(payment_date, 'DAY MONTH YYYY') from payment
