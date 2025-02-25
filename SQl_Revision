@@ -202,6 +202,7 @@ select payment_date, extract(quarter from payment_date) from payment
 
 
 
+
 select age(payment_date) from payment
 
 
@@ -220,3 +221,148 @@ select to_char(payment_date, 'MONTH YYYY') from payment
 select to_char(payment_date, 'YYYY') from payment
 
 select to_char(payment_date, 'DAY MONTH YYYY') from payment
+
+select to_char(payment_date, 'Day') from payment
+
+
+
+
+
+select 
+distinct(to_char(payment_date, 'DAY')), 
+extract(dow from payment_date)
+from payment
+
+
+
+
+
+select distinct (to_char(payment_date, 'MONTH')) from payment
+
+select count(payment_id) from payment
+where TRIM(to_char(payment_date, 'Day')) = 'Monday'
+
+select count(payment_id) from payment
+where extract(dow from payment_date) = 1
+
+select count(payment_id) from payment
+where to_char(payment_date, 'Dy') = 'Mon'
+
+
+
+
+select round(rental_rate/replacement_cost, 2)
+from film
+
+select round(rental_rate/replacement_cost, 2)*100
+from film
+
+select replacement_cost, 0.1*replacement_cost as deposit
+from film
+
+
+
+
+
+
+select 
+	first_name, last_name, 
+	concat(first_name, ' ', last_name) as customer_full_name
+from customer
+
+select 
+	first_name, last_name, 
+	first_name || ' ' || last_name as customer_full_name
+from customer
+
+select 
+	first_name, last_name, 
+	upper(first_name) || ' ' || upper(last_name) as customer_full_name
+from customer
+
+select 
+	first_name, last_name, 
+	lower(first_name) || ' ' || lower(last_name) as customer_full_name
+from customer
+
+select 
+	first_name, last_name, 
+	upper(left(first_name, 1)) || substring(first_name, 2) || ' ' ||
+	upper(left(last_name, 1)) || substring(last_name, 2)
+from customer
+
+select 
+	first_name, last_name, 
+	INITCAP(first_name) || ' ' || INITCAP(last_name)
+from customer
+
+select 
+	first_name, length(first_name) as first_name_length, 
+	last_name, length(last_name) as last_name_length,
+	concat(first_name, ' ', last_name) as customer_name,
+	length(concat(first_name, last_name)) as customer_name_total_length
+from customer
+
+
+
+
+
+select 
+	rental_rate, replacement_cost, 
+	rental_rate + replacement_cost, replacement_cost - rental_rate,
+	rental_rate * replacement_cost, rental_rate / replacement_cost
+from film
+
+
+
+
+select title, rental_rate from film 
+where rental_rate > 
+(select avg(rental_rate) from film)
+
+select title from film
+join inventory on film.film_id = inventory.film_id
+join rental on rental.inventory_id = inventory.inventory_id
+where return_date between '2005-05-29' and '2005-05-30'
+-- This returns duplicates title because of multiple entry for 
+-- same film_id in inventory
+
+select title, count(title) from
+	(select title from film
+	join inventory on film.film_id = inventory.film_id
+	join rental on rental.inventory_id = inventory.inventory_id
+	where return_date between '2005-05-29' and '2005-05-30') AS subquery_alias
+group by title
+having count(title)>1
+-- subqueries inside FROM must have an alias in PostgreSQL.
+
+select distinct title from film
+join inventory on film.film_id = inventory.film_id
+join rental on rental.inventory_id = inventory.inventory_id
+where return_date between '2005-05-29' and '2005-05-30'
+
+select title from film
+where film_id in
+(select film_id from inventory
+join rental on inventory.inventory_id = rental.inventory_id 
+where return_date between '2005-05-29' and '2005-05-30')
+
+select first_name, last_name from customer as c
+where exists 
+(select * from payment p 
+where p.customer_id = c.customer_id and amount >11)
+
+
+
+
+
+select count(*) from film
+-- 1000
+
+
+select f1.title, f2.title, f1.length
+from film f1
+join film f2
+on f1.film_id != f2.film_id
+and f1.length = f2.length
+-- 6972
