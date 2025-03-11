@@ -1,9 +1,15 @@
+SET SQL_SAFE_UPDATES = 0;
+
+use test;
+
+
 create table deduplicated
 (
 	id int,
 	first_name varchar(20),
 	last_name varchar(25)
-)
+);
+
 
 insert into deduplicated 
 	(id, first_name, last_name) 
@@ -17,52 +23,51 @@ values
 	(7, 'roshan', 'gupta'),
 	(8, ' roshan', ' kumar'),
 	(9, 'roshan ', 'gupta ')
+    ;
+    
 
-
+delete from deduplicated;
+    
 select * from  deduplicated
-order by id
+order by id;
 
 
-select distinct * from deduplicated
-order by id
-
-delete from deduplicated
-where id not in
-(
-	select min(id) from deduplicated
-	group by first_name, last_name
-)
--- 59 msec.
+delete d1 from deduplicated d1,
+deduplicated d2
+where
+d1.first_name = d2.first_name 
+and d1.last_name = d2.last_name
+and d1.id>d2.id;
 
 
-DELETE FROM deduplicated AS dd1
-using deduplicated AS dd2
-where dd1.first_name = dd2.first_name
-AND dd1.last_name = dd2.last_name
-AND dd1.id > dd2.id;
--- 63 msec.
+delete d1 from deduplicated d1
+join deduplicated d2
+on d1.first_name = d2.first_name
+and d1.last_name = d2.last_name
+and d1.id > d2.id;
 
 
+select * from deduplicated;
 
+select UCASE(first_name) from deduplicated;
 
 select UPPER(first_name) from deduplicated;
 
+select LCASE(first_name) from deduplicated;
 
 select LOWER(first_name) from deduplicated;
 
-select first_name, length(first_name) from deduplicated
+select first_name, length(first_name) from deduplicated;
+
 
 select 
 	concat(first_name, ' ', last_name) as full_name , 
 	length(concat(first_name, last_name)) as full_name_length
-from deduplicated
+from deduplicated;
 
 
-select substring(first_name, 1, 3) from deduplicated
+select substring(first_name, 1, 3) from deduplicated;
 
-
-select first_name, last_name
-from deduplicated where id = 8
 
 select 
 	id, 
@@ -70,19 +75,21 @@ select
 	trim(first_name) as trimmed_first_name, length(trim(first_name)) as length_trimmed_first_name,
 	last_name, length(last_name),
 	trim(last_name) as trimmed_last_name, length(trim(last_name)) as length_trimmed_last_name
-from deduplicated where id = 8 or id = 9
+from deduplicated where id = 8 or id = 9;
+
 
 
 select 
 	replace(first_name, substr(first_name, 4, length(first_name)), substring(last_name, 1,3)) 
-from deduplicated
+from deduplicated;
 
 
-select now()
 
-select current_date
+select now();
 
-select current_time
+select current_date;
+
+select current_time;
 
 alter table deduplicated
 add column dob date;
@@ -94,11 +101,6 @@ set dob =
 		when 2 then cast('1998-03-31' as date)
 		else cast('1900-01-01' as date)
 	end;
-
-
-select distinct dob from deduplicated
-
-
-select age(dob) from deduplicated
-
-select (current_date - cast(dob as date)) as days_diff from deduplicated
+    
+    
+select datediff(current_date, cast(dob as date)) from deduplicated;
